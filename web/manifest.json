@@ -1,6 +1,6 @@
 {
-    "name": "teste",
-    "short_name": "teste",
+    "name": "pac",
+    "short_name": "pac",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

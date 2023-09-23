@@ -18,6 +18,7 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 Trello - https://trello.com/b/tUP76BA9/pac-iv-20232-grupo-0
 Canvas - https://docs.google.com/document/d/1yQQuMjxyrOYiXYlhlz_MWWe-uwtWoAfP11cM4OD4gzg/edit?usp=sharing
 Termo de Abertura - https://docs.google.com/document/d/132xtHbymVt3te7ZIOHPPk0EN7Ymr2L3cw0M8eusDA7E/edit?usp=sharing
+Declaração de Escopo: https://catolicasc-my.sharepoint.com/:w:/g/personal/thomas_maffezzolli_catolicasc_edu_br/EVTDEC67bnVGjk4zoe6icG8BV_lekOtpzeyy751cRDaBKA?e=5INsdc
 
 ## Equipe do Projeto
 

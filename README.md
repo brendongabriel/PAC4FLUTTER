@@ -2,6 +2,10 @@
 
 Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele ajuda os usuários a gerenciar suas finanças, incluindo o acompanhamento de despesas, cálculo de orçamentos e a visualização de relatórios financeiros.
 
+## Mockup:
+
+(Em breve)
+ 
 ## Funcionalidades:
 
 ### Tela de Login:
@@ -31,6 +35,7 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 - Appbar com foto e primeiro nome do ususario e acesso ao menu;
 - Primeiro acesso dicas de investimentos e introdução a tela de receitas; 
 - Resumos da telas de receitas, dicas e gráficos sobre as receitas do usuários;
+- Lembretes financeiros;
 - Menu de navegação com acesso as outras telas do aplicativo;
 
 ### Tela Perfil do Usuário:
@@ -55,19 +60,19 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 - Adicionar lucros de empreendimentos;
 - Menu de navegação;
   
-###	Tela de Resumos Gráficos de Receitas:
+### Tela de Resumos Gráficos de Receitas:
 - Gráficos sobre as receitas cadastradas;
 - Calculadora de ganhos ao longo prazo;
-- Cálculos para orçamentos;
+- Cálculos para metas e orçamentos;
 - Menu de navegação;
   
-###	Tela de Resumos Gráficos de Despesas:
+### Tela de Resumos Gráficos de Despesas:
 - Gráficos sobre as despesas cadastradas;
 - Resumo sobre gastos mensais;
 - Fitros de gastos por categoria;
 - Menu de navegação;
 
-###	Tela de informações e dicas sobre investimentos:
+### Tela de Informações e Dicas sobre Investimentos:
 - Informações sobre a bolsa;
 - Informações sobre moedas;
 - Dicas sobre ações e investimentos;

@@ -5,7 +5,6 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 ## Funcionalidades:
 
 ### Tela de Login:
-- Logo;
 - Inserir email;
 - Inserir senha;
 - Botão para tela redefinir senha;
@@ -14,7 +13,6 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 - Pop-up verificação de dois fatores;
 
 ### Tela de Redefinir Senha:
-- Logo;
 - Inserir email da conta;
 - Botão para enviar link com código para o email;
 - Inserir código para redefinir senha;
@@ -22,7 +20,6 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 - Confirmar nova senha;
 
 ### Tela de Cadastro:
-- Logo;
 - Inserir nome completo;
 - Inserir data de nascimento;
 - Inserir email;
@@ -41,26 +38,42 @@ Este é um projeto de Controle Financeiro Pessoal desenvolvido em Flutter. Ele a
 - Editar informações;
 - Menu de navegação;
 
-  ### Tela Perfil do Usuário:
-
-
-  •	Menu de configurações;
-•	Tema escuro; 
-•	Tela para cadastro de despesas;
-•	Tela para cadastro de receitas;
-•	Tela de resumos gráficos de receitas;
-•	Tela de resumos gráficos de despesas;
-•	Tela de informações e dicas sobre investimentos;
-
+### Menu de Configurações:
+- Alterar tema claro/escuro;
+- Alterar idioma;
+- Alterar moeda;
+- Limpar cache;
+- Versão do Aplicativo;
+   
+### Tela de Cadastro de Despesas:
+- Adicionar lista de despesas mensais;
+- Filtro entre despesas fixas e variávei;
+- Menu de navegação;
+ 
+### Tela de Cadastro de Receitas:
+- Adicionar seu salário;
+- Adicionar lucros de empreendimentos;
+- Menu de navegação;
   
-
+###	Tela de Resumos Gráficos de Receitas:
+- Gráficos sobre as receitas cadastradas;
+- Calculadora de ganhos ao longo prazo;
+- Cálculos para orçamentos;
+- Menu de navegação;
   
+###	Tela de Resumos Gráficos de Despesas:
+- Gráficos sobre as despesas cadastradas;
+- Resumo sobre gastos mensais;
+- Fitros de gastos por categoria;
+- Menu de navegação;
 
-  
+###	Tela de informações e dicas sobre investimentos:
+- Informações sobre a bolsa;
+- Informações sobre moedas;
+- Dicas sobre ações e investimentos;
+- Menu de navegação;
 
-
-
-## Como usar
+## Como usar:
 
 (Em breve)
 

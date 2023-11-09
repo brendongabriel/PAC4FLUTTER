@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pac/cadastro/cadastro.view.dart';
+import 'package:http/http.dart' as http;
+import 'package:pac/home/home.view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -9,10 +11,17 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _senhaController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       home: Scaffold(
+        key: _scaffoldKey,
         body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -35,29 +44,29 @@ class _LoginViewState extends State<LoginView> {
                     height: 100,
                   ),
                   const SizedBox(height: 60),
-                  const TextField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        //labelText: 'Email',
-                        hintText: 'Email',
-                        enabled: true,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 255, 255, 255)
-                          ),
-                        ),
-                          focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 14, 64, 6),
-                          ),
+                  TextField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                      enabled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 255, 255, 255),
                         ),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 14, 64, 6),
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  const TextField(
+                  TextField(
+                    controller: _senhaController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      //labelText: 'Senha',
                       hintText: 'Senha',
                       enabled: true,
                       border: OutlineInputBorder(
@@ -73,12 +82,17 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  Row( 
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: () {
                           // Ação para o botão "ENTRAR"
+                          String email = _emailController.text;
+                          String senha = _senhaController.text;
+                          // Faça algo com o email e senha
+
+                          _loginButtonPressed();
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -86,8 +100,10 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           backgroundColor: Colors.green[900],
                         ).copyWith(
-                          minimumSize: MaterialStateProperty.all(const Size(0, 40)),
-                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 45.0)),
+                          minimumSize:
+                              MaterialStateProperty.all(const Size(0, 40)),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(horizontal: 45.0)),
                         ),
                         child: const Text('ENTRAR'),
                       ),
@@ -106,8 +122,10 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           backgroundColor: Colors.green[900],
                         ).copyWith(
-                          minimumSize: MaterialStateProperty.all(const Size(0, 40)),
-                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30.0)),
+                          minimumSize:
+                              MaterialStateProperty.all(const Size(0, 40)),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(horizontal: 30.0)),
                         ),
                         child: const Text('CRIAR CONTA'),
                       ),
@@ -118,6 +136,46 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _loginButtonPressed() async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://app-carteira.wnology.io/api/v1/login'),
+        body: {
+          'email': _emailController.text,
+          'password': _senhaController.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Login bem-sucedido!');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const HomeView(),
+          ),
+        );
+      } else {
+        print('Erro ao fazer login: ${response.statusCode}');
+        showSuccessMessage("Credenciais inválidas. Tente novamente.");
+        _emailController.clear();
+        _senhaController.clear();
+      }
+    } catch (error) {
+      print('Erro ao fazer login: $error');
+    }
+  }
+
+  void showSuccessMessage(String message) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(message),
+        actions: <Widget>[
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Ok"))
+        ],
       ),
     );
   }

@@ -73,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  Row( // Utilize um Row para colocar os botões lado a lado
+                  Row( 
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       ElevatedButton(

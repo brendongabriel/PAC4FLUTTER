@@ -47,7 +47,7 @@ class _LoginViewState extends State<LoginView> {
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Email',
                       enabled: true,
                       border: OutlineInputBorder(
@@ -66,7 +66,7 @@ class _LoginViewState extends State<LoginView> {
                   TextField(
                     controller: _senhaController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Senha',
                       enabled: true,
                       border: OutlineInputBorder(
@@ -87,11 +87,6 @@ class _LoginViewState extends State<LoginView> {
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: () {
-                          // Ação para o botão "ENTRAR"
-                          String email = _emailController.text;
-                          String senha = _senhaController.text;
-                          // Faça algo com o email e senha
-
                           _loginButtonPressed();
                         },
                         style: ElevatedButton.styleFrom(

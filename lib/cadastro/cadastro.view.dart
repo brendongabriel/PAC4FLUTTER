@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pac/cadastro/widget/checkbox.widget.dart';
+import 'package:pac/login/login.view.dart';
+import 'package:http/http.dart' as http;
 
 class CadastroView extends StatefulWidget {
   const CadastroView({super.key});
@@ -9,9 +10,14 @@ class CadastroView extends StatefulWidget {
 }
 
 class _CadastroViewState extends State<CadastroView> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _senhaController1 = TextEditingController();
+  final TextEditingController _senhaController2 = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Cadastro'),
@@ -42,8 +48,9 @@ class _CadastroViewState extends State<CadastroView> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 40), 
-                const TextField(
+                const SizedBox(height: 40),
+                TextField(
+                  controller: _nameController,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
                     hintText: 'Nome Completo',
@@ -59,9 +66,10 @@ class _CadastroViewState extends State<CadastroView> {
                       ),
                     ),
                   ),
-                ), 
-                const SizedBox(height: 10),
-                const TextField(
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: 'Email',
@@ -77,9 +85,10 @@ class _CadastroViewState extends State<CadastroView> {
                       ),
                     ),
                   ),
-                ),       
+                ),
                 const SizedBox(height: 10),
-                const TextField(
+                TextField(
+                  controller: _senhaController1,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Senha',
@@ -95,9 +104,10 @@ class _CadastroViewState extends State<CadastroView> {
                       ),
                     ),
                   ),
-                ), 
+                ),
                 const SizedBox(height: 10),
-                const TextField(
+                TextField(
+                  controller: _senhaController2,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Confirme sua Senha',
@@ -117,12 +127,21 @@ class _CadastroViewState extends State<CadastroView> {
                 const SizedBox(height: 10),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: TermosCheck(),
+                  //child: TermosCheck(),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    
+                    if (_emailController.text.isEmpty ||
+                        _senhaController1.text.isEmpty ||
+                        _senhaController2.text.isEmpty ||
+                        _nameController.text.isEmpty) {
+                      showSuccessMessage(
+                          "Preencha todos os campos para continuar.");
+                      return;
+                    } else {
+                      _registerAccountPressed();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[900],
@@ -143,6 +162,78 @@ class _CadastroViewState extends State<CadastroView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _registerAccountPressed() async {
+    if (!_emailController.text.contains('@') ||
+        !_emailController.text.contains('.')) {
+      showSuccessMessage(
+          "Digite um email válido. Verifique os dados e tente novamente.");
+      _senhaController2.clear();
+      _senhaController1.clear();
+    }
+
+    if (_nameController.text.split(" ").length < 2) {
+      showSuccessMessage(
+          "Digite seu nome completo. Verifique os dados e tente novamente.");
+      _senhaController2.clear();
+      _senhaController1.clear();
+      return;
+    }
+
+    if (_senhaController1.text != _senhaController2.text) {
+      showSuccessMessage(
+          "As senhas não coincidem. Verifique os dados e tente novamente.");
+      _senhaController2.clear();
+      _senhaController1.clear();
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://app-carteira.wnology.io/api/v1/user'),
+        body: {
+          'email': _emailController.text,
+          'password': _senhaController1.text,
+          'name': _nameController.text
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Usuário criado com sucesso!');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const LoginView(),
+          ),
+        );
+      } else if (response.statusCode == 409) {
+        showSuccessMessage(
+            "Este e-mail já está em uso. Por favor, escolha outro.");
+        _emailController.clear();
+        _senhaController2.clear();
+        _senhaController1.clear();
+      } else {
+        print('Erro ao fazer login: ${response.statusCode}');
+        showSuccessMessage(
+            "Erro ao criar usuário. Verifique os dados e tente novamente.");
+        _senhaController2.clear();
+        _senhaController1.clear();
+      }
+    } catch (error) {
+      print('Erro ao fazer login: $error');
+    }
+  }
+
+  void showSuccessMessage(String message) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(message),
+        actions: <Widget>[
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Ok"))
+        ],
       ),
     );
   }

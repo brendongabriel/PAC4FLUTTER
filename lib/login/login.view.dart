@@ -3,6 +3,8 @@ import 'package:pac/cadastro/cadastro.view.dart';
 import 'package:http/http.dart' as http;
 import 'package:pac/home/home.view.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -87,7 +89,13 @@ class _LoginViewState extends State<LoginView> {
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: () {
-                          _loginButtonPressed();
+                          if (_emailController.text.isEmpty ||
+                              _senhaController.text.isEmpty) {
+                            showSuccessMessage(
+                                "Preencha todos os campos para continuar.");
+                          } else {
+                            _loginButtonPressed();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -147,6 +155,11 @@ class _LoginViewState extends State<LoginView> {
 
       if (response.statusCode == 200) {
         print('Login bem-sucedido!');
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('user', response.body.toString());
+        _emailController.clear();
+        _senhaController.clear();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const HomeView(),

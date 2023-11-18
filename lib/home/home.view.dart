@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'dart:convert';
-
+import 'package:pac/registerDebt/registerDebt.view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
@@ -15,6 +14,14 @@ class _HomeViewState extends State<HomeView> {
   String? _user = ''; // Variável para armazenar o user
   String _name = ''; // Variável para armazenar o e-mail
   Map<String, dynamic>? _userObj; // Usando Map para representar o JSON
+
+  void openRegister() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => RegisterDebt(),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -35,12 +42,17 @@ class _HomeViewState extends State<HomeView> {
     // Verificar se a chave 'email' existe antes de acessá-la
     if (_userObj!.containsKey('firstName')) {
       _name = _userObj!['firstName'].split(' ')[0];
-    } 
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: openRegister,
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green[900],
+      ),
       appBar: AppBar(
         title: const Text('FinanceApp'),
         backgroundColor: Colors.green[900],

@@ -44,7 +44,7 @@ class _RegisterDebtState extends State<RegisterDebt> {
   double _deadline = 0.0;
   String _type = 'divida'; // Valor inicial fixo para tipo
 
-  List<String> categories = ["salario", "lazer", "estudo", "comida"];
+  List<String> categories = ["salario", "lazer", "estudo", "comida", "diversos"];
   List<String> types = ["divida", "receita"];
 
   @override
@@ -197,13 +197,7 @@ class _RegisterDebtState extends State<RegisterDebt> {
 
       if (response.statusCode == 200) {
         print('Dado inserido!');
-        // Navigator.of(context).push(
-        // MaterialPageRoute(
-        //   builder: (context) => const LoginView(),
-        // ),
-        // );
-        // Limpar os campos
-        
+
         showSuccessMessage("$_type inserido com sucesso!");
 
         setState(() {
@@ -213,7 +207,6 @@ class _RegisterDebtState extends State<RegisterDebt> {
           _months = 0.0;
           _deadline = 0.0;
         });
-        
       } else if (response.statusCode == 400) {
         showSuccessMessage("Valores inseridos estão errados.");
       } else {
@@ -232,7 +225,13 @@ class _RegisterDebtState extends State<RegisterDebt> {
       builder: (ctx) => AlertDialog(
         title: Text(message),
         actions: <Widget>[
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Ok"))
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx); // Fecha o AlertDialog
+              Navigator.pop(context); // Navega de volta para o HomeView
+            },
+            child: Text("Ok"),
+          ),
         ],
       ),
     );

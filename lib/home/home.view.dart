@@ -13,6 +13,9 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  int _currentMonth = DateTime.now().month;
+  int _currentYear = DateTime.now().year;
+
   String? _user = ''; // Variável para armazenar o user
   String _email = ''; // Variável para armazenar o e-mail
   Map<String, dynamic>? _userObj; // Usando Map para representar o JSON
@@ -46,6 +49,24 @@ class _HomeViewState extends State<HomeView> {
     )
         .then((_) {
       _loadDebts();
+    });
+  }
+
+  void _removeItem(String id) {
+    print(id);
+    http
+        .delete(
+      Uri.parse('https://app-carteira.wnology.io/api/v1/debt/$id'),
+    )
+        .then((response) {
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        showSuccessMessage("Linha deletada com sucesso");
+        _loadDebts();
+      } else {
+        print('Falha na solicitação: ${response.statusCode}');
+        showSuccessMessage("Erro ao deletar a dívida");
+      }
     });
   }
 
@@ -92,50 +113,68 @@ class _HomeViewState extends State<HomeView> {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    child: Text(
-                      'Total: ${total} reais',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: isTotalNegative
-                            ? Colors.red // Cor do texto se total for negativo
-                            : Colors.green[900], // Cor do texto padrão
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_left),
+                        onPressed: () {
+                          _navigateMonth(-1);
+                        },
                       ),
+                      Container(
+                        child: Text(
+                          'Total: ${total} reais',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: isTotalNegative
+                                ? Colors
+                                    .red // Cor do texto se total for negativo
+                                : Colors.green[900], // Cor do texto padrão
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.arrow_right),
+                        onPressed: () {
+                          _navigateMonth(1);
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Center(
+                      child: Text(
+                    '${_getFormattedPeriod()}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green[900],
                     ),
-                    alignment: Alignment.center,
+                  )),
+                  SizedBox(
+                    height: 5,
                   ),
                   SizedBox(
                     height: 13,
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: items?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        var item = items![index];
-                        bool isReceita = item['type'] == 'receita';
-
-                        return ListTile(
-                          title: Center(
-                            child: Text(
-                              item['name'],
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          subtitle: Center(
-                            child: Text(
-                              'Category: ${item['category']}, Type: ${item['type']}, Value: ${item['value']}',
-                            ),
-                          ),
-                          tileColor:
-                              isReceita ? Colors.green[100] : Colors.red[100],
-                          // Adicione mais informações se necessário
-                        );
-                      },
-                    ),
+                  DataTable(
+                    columns: [
+                      DataColumn(label: Text('Nome')),
+                      DataColumn(label: Text('Categoria')),
+                      DataColumn(label: Text('Tipo')),
+                      DataColumn(label: Text('Valor')),
+                      DataColumn(label: Text('Ação')),
+                    ],
+                    rows: _getRows(),
+                    columnSpacing: 16.0,
+                    dataRowHeight: 60.0,
+                    headingRowHeight: 60.0,
+                    dividerThickness: 1.0,
                   ),
                 ],
               )
@@ -146,12 +185,101 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  List<DataRow> _getRows() {
+    // Adapte essa parte conforme a estrutura dos seus dados
+    return (items ?? []).map((item) {
+      bool isReceita = item['type'] == 'receita';
+
+      return DataRow(cells: [
+        DataCell(Center(child: Text(item['name']))),
+        DataCell(Center(child: Text(item['category']))),
+        DataCell(Center(child: Text(item['type']))),
+        DataCell(Center(child: Text(item['value'].toString()))),
+        DataCell(
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              // Chame sua função de remoção aqui, passando o índice ou o item, como preferir
+              _removeItem(item['id']);
+            },
+          ),
+        ),
+      ]);
+    }).toList();
+  }
+
+  String _getFormattedPeriod() {
+    return '${_getMonthName(_currentMonth)} $_currentYear';
+  }
+
+  String _getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return 'Janeiro';
+      case 2:
+        return 'Fevereiro';
+      case 3:
+        return 'Março';
+      case 4:
+        return 'Abril';
+      case 5:
+        return 'Maio';
+      case 6:
+        return 'Junho';
+      case 7:
+        return 'Julho';
+      case 8:
+        return 'Agosto';
+      case 9:
+        return 'Setembro';
+      case 10:
+        return 'Outubro';
+      case 11:
+        return 'Novembro';
+      case 12:
+        return 'Dezembro';
+      default:
+        return '';
+    }
+  }
+
+  void showSuccessMessage(String message) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx); // Fecha o AlertDialog
+            },
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateMonth(int change) {
+    setState(() {
+      _currentMonth += change;
+      if (_currentMonth < 1) {
+        _currentMonth = 12;
+        _currentYear--;
+      } else if (_currentMonth > 12) {
+        _currentMonth = 1;
+        _currentYear++;
+      }
+      _dataLoaded = false;
+    });
+    _loadDebts();
+  }
+
   Future<void> _loadDebts() async {
     try {
-      print(_email);
       final response = await http.get(
         Uri.parse(
-            'https://app-carteira.wnology.io/api/v1/debt?user=${_email}&month=12'),
+            'https://app-carteira.wnology.io/api/v1/debt?user=${_email}&year=${_currentYear}&month=${_currentMonth}'),
       );
 
       // Verificando se a solicitação foi bem-sucedida (código de status 200)
